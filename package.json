@@ -1,0 +1,11 @@
+{
+  "name": "igo-groups",
+  "version": "1.0.0",
+  "description": "IGO Groups Website",
+  "scripts": {
+    "dev": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
