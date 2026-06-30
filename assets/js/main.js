@@ -209,7 +209,7 @@ function openModal(title, subtitle, description, featuresArray, ctaText, ctaLink
   document.getElementById('modal-title-el').textContent = title;
   document.getElementById('modal-subtitle-el').textContent = subtitle;
   document.getElementById('modal-desc-el').innerHTML = description;
-  
+
   const featsEl = document.getElementById('modal-features-el');
   featsEl.innerHTML = '';
   if (featuresArray && featuresArray.length > 0) {
@@ -229,6 +229,13 @@ function openModal(title, subtitle, description, featuresArray, ctaText, ctaLink
     ctaEl.style.display = 'inline-block';
     ctaEl.textContent = ctaText || 'Visit Website';
     ctaEl.href = ctaLink;
+    if (/^https?:\/\//i.test(ctaLink)) {
+      ctaEl.target = '_blank';
+      ctaEl.rel = 'noopener';
+    } else {
+      ctaEl.removeAttribute('target');
+      ctaEl.removeAttribute('rel');
+    }
   } else {
     ctaEl.style.display = 'none';
   }
@@ -246,3 +253,40 @@ function closeModal() {
     document.body.style.overflow = '';
   }
 }
+
+/* ---------- Image Lightbox (department team/banner photos) ---------- */
+function openImageLightbox(src, alt) {
+  let overlay = document.getElementById('igo-img-lightbox');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'igo-img-lightbox';
+    overlay.className = 'img-lightbox-overlay';
+    overlay.innerHTML = `
+      <button class="img-lightbox-close" onclick="closeImageLightbox()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <img class="img-lightbox-img" id="igo-img-lightbox-img" src="" alt="">
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeImageLightbox();
+    });
+  }
+  document.getElementById('igo-img-lightbox-img').src = src;
+  document.getElementById('igo-img-lightbox-img').alt = alt || '';
+  void overlay.offsetWidth;
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageLightbox() {
+  const overlay = document.getElementById('igo-img-lightbox');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeImageLightbox();
+});
